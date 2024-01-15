@@ -8,7 +8,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import serial
 import numpy as np
-import threading 
+from threading import Thread
 #------------- End
 
 root = tk.Tk()
@@ -91,13 +91,14 @@ class check_make(combo_make):
         self.Digital_Pin = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
         self.Analog_Pin = ["A0", "A1", "A2", "A3", "A4", "A5"]
         self.check_boxes = []
-
+        
     def check_(self, using_combo):
         self.check_boxes = []  # Reset the list for each call
         pins = self.Digital_Pin if using_combo.getU("pin_") == "digital" else self.Analog_Pin
         # 삼항 연산자로 pin 에 데이터 저장
-
+        
         for i, pin in enumerate(pins):
+            
             var = tk.IntVar()
             check_box = tk.Checkbutton(root, text=str(pin), variable=var)
             check_box.place(x=10, y=170 + i * 20)
@@ -121,6 +122,10 @@ def btnpress() :
     print("Initiating Arudino Serial")
     py_serial = serial.Serial(port=dev_combo.getU("dev"), baudrate = baud_combo.getU("baud"))
     check_sum.check_(using_combo)
+
+## kill shot button
+def exitpress():
+    exit()
 ###############################
 ######### Definition end ######
 ################################
@@ -142,6 +147,8 @@ class btn_make() :
         
         if cmd == "btnpress" : 
             self.btn_make_init.config(command= btnpress)
+        if cmd == "exitpress" :
+            self.btn_make_init.config(command=  exitpress )
         
 ###################################################
 ###################################################
@@ -172,7 +179,10 @@ check_sum = check_make()
 
 
 btn_1 = btn_make()
-btn_1.make_btn("connect", "btnpress" , 5, 130, 15)
+btn_1.make_btn("connect", "btnpress" , 5, 130, 10)
+
+btn_2 = btn_make()
+btn_2.make_btn("exit", "exitpress", 100, 130, 10)
 
 
 lb = tk.Label(root)
