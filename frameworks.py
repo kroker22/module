@@ -1,4 +1,5 @@
 #------ Import
+from tkinter import *
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.animation as animation
@@ -7,11 +8,12 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import serial
 import numpy as np
+import threading 
 #------------- End
 
 root = tk.Tk()
 root.title("liquid frameworks")
-root.geometry("1200x800")
+root.geometry("500x800")
 root.resizable(False,False)
 
 
@@ -24,7 +26,7 @@ class combo_make() :
     def __init__ (self) :
         self.box_data_board = ["Arduino","STM32","Atmega128","Atmega328P"]
         self.box_data_baud = [4800, 9600, 19200, 31250, 38400, 57600, 115200]
-        self.box_data_dev = ["/dev/ttyUSB0","/dev/ttyUSB1","/dev/ttyUSB2"]
+        self.box_data_dev = ["/dev/ttyUSB0","/dev/ttyUSB1","/dev/ttyUSB2","COM1","COM2","COM3","COM4"]
         self.box_data_ino = ["digital","Analog"]
         self.x = 0
         self.y = 0
@@ -82,28 +84,27 @@ class combo_make() :
         if name == "pin_" :
             return self.box_name_init.get()
 
-class check_make() :
+class check_make(combo_make) :
     ## Using inheritance, make check box class
     def __init__ (self ) : 
-
+        super().__init__() 
         self.Digital_Pin = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
         self.Analog_Pin = ["A0","A1","A2","A3","A4","A5"]
         self.temp = []
-    def check_something(self):
-        
+        self.checking = []
+    def check_(self,using_combo):  
         # if annotion string is digial 
         # make type of variable " INT " i for checkbox indexes
-        if using_combo.getU("pin_") == "digital" : 
-            for i in self.Digital_Pin.len() :
-                self.temp =  globals()["check_"+str(i)] = self.Digital_Pin[i]
-                print(self.temp[i])
-                
-    def make_check(self, indexs) :
+        self.temp = self.Digital_Pin
+        self.checking = using_combo.getU("pin_")
+        check_var1 = IntVar()
         
+        c1 = Checkbutton(root, text='digital', variable=check_var1)
+        c1.pack()
                 
                 
                 
-##############################
+#############################
 ######## Definition of Button
 ##############################
 
@@ -119,6 +120,7 @@ def btnpress() :
     lb.config(text = a )
     print("Initiating Arudino Serial")
     py_serial = serial.Serial(port=dev_combo.getU("dev"), baudrate = baud_combo.getU("baud"))
+    check_sum.check_(using_combo)
 ###############################
 ######### Definition end ######
 ################################
@@ -163,14 +165,14 @@ using_combo = combo_make()
 board_combo.make_combo("board",10,10)
 baud_combo.make_combo("baud",10,40)
 dev_combo.make_combo("dev",10,70)    
-using_combo.make_combo("pin_",10,90) 
+using_combo.make_combo("pin_",10,100) 
         
 
 check_sum = check_make()
-check_sum.check_something()
+
 
 btn_1 = btn_make()
-btn_1.make_btn("connect", "btnpress" , 5, 110, 15)
+btn_1.make_btn("connect", "btnpress" , 5, 130, 15)
 
 
 lb = tk.Label(root)
@@ -178,3 +180,4 @@ lb.config(text = "normal_state")
 lb.place(x= 5, y = 780)
 
 root.mainloop()
+ 
