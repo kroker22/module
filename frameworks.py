@@ -97,11 +97,19 @@ class check_make(combo_make) :
         # make type of variable " INT " i for checkbox indexes
         self.temp = self.Digital_Pin
         self.checking = using_combo.getU("pin_")
-        check_var1 = IntVar()
+        for i in range(len(self.Digital_Pin)) :
+            globals()['check_box_{}'.format(i)] = self.Digital_Pin[i]
+            print(globals())
+            # check_box1 = 0
+            # check_box2 = 1
+            
+"""
+check_var1 = IntVar()
+c1 = Checkbutton(root, text='digital', variable=check_var1)
+c1.place(x=10, y = 200)
         
-        c1 = Checkbutton(root, text='digital', variable=check_var1)
-        c1.pack()
-                
+"""
+     
                 
                 
 #############################
