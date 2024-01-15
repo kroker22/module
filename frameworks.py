@@ -83,7 +83,26 @@ class combo_make() :
             return self.box_name_init.get()
         if name == "pin_" :
             return self.box_name_init.get()
+        
+        
+class check_make():
+    def __init__(self):
+        super().__init__()
+        self.Digital_Pin = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        self.Analog_Pin = ["A0", "A1", "A2", "A3", "A4", "A5"]
+        self.check_boxes = []
 
+    def check_(self, using_combo):
+        self.check_boxes = []  # Reset the list for each call
+        pins = self.Digital_Pin if using_combo.getU("pin_") == "digital" else self.Analog_Pin
+
+        for i, pin in enumerate(pins):
+            var = tk.IntVar()
+            check_box = tk.Checkbutton(root, text=str(pin), variable=var)
+            check_box.place(x=10, y=170 + i * 20)
+            self.check_boxes.append(var)
+
+"""
 class check_make(combo_make) :
     ## Using inheritance, make check box class
     def __init__ (self ) : 
@@ -95,20 +114,27 @@ class check_make(combo_make) :
     def check_(self,using_combo):  
         # if annotion string is digial 
         # make type of variable " INT " i for checkbox indexes
+       
+
         self.temp = self.Digital_Pin
         self.checking = using_combo.getU("pin_")
         for i in range(len(self.Digital_Pin)) :
             globals()['check_box_{}'.format(i)] = self.Digital_Pin[i]
-            print(globals())
+          
+            
+            print(globals().keys())
+  
             # check_box1 = 0
             # check_box2 = 1
             
-"""
+
 check_var1 = IntVar()
 c1 = Checkbutton(root, text='digital', variable=check_var1)
 c1.place(x=10, y = 200)
         
+
 """
+
      
                 
                 
