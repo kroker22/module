@@ -94,6 +94,11 @@ class check_make(combo_make):
         
     def check_(self, using_combo):
         self.check_boxes = []  # Reset the list for each call
+        
+        for check_box in root.winfo_children() :
+            if isinstance(check_box, tk.Checkbutton):
+                check_box.destroy()
+                
         pins = self.Digital_Pin if using_combo.getU("pin_") == "digital" else self.Analog_Pin
         # 삼항 연산자로 pin 에 데이터 저장
         
@@ -103,7 +108,12 @@ class check_make(combo_make):
             check_box = tk.Checkbutton(root, text=str(pin), variable=var)
             check_box.place(x=10, y=170 + i * 20)
             self.check_boxes.append(var)
-                
+          
+            
+          
+            
+
+            
                 
 #############################
 ######## Definition of Button
