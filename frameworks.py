@@ -1,5 +1,6 @@
 #------ Import
 from tkinter import *
+from pandas import DataFrame
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.animation as animation
@@ -15,7 +16,7 @@ root = tk.Tk()
 root.title("liquid frameworks")
 root.geometry("500x800")
 root.resizable(False,False)
-py_serial = 0
+
 
 
 # combo box 만드는 class , member 변수 초기화 위에서 시켜주고
@@ -108,13 +109,10 @@ class check_make(combo_make):
             check_box = tk.Checkbutton(root, text=str(pin), variable=var)
             check_box.place(x=10, y=170 + i * 20)
             self.check_boxes.append(var)
-          
             
-          
+            
             
 
-            
-                
 #############################
 ######## Definition of Button
 ##############################
@@ -132,7 +130,7 @@ def btnpress() :
     print("Initiating Arudino Serial")
     py_serial = serial.Serial(port=dev_combo.getU("dev"), baudrate = baud_combo.getU("baud"))
     check_sum.check_(using_combo)
-    if using_combo.getU(("pin_")) :
+    if using_combo.getU(("pin_"))  == "digital":
         print("using digitalWrite")
     else :
         print("using AnalogWrite")
@@ -141,11 +139,12 @@ def btnpress() :
 def exitpress():
     exit()
 def disconnect():
-    py_serial.close()
+    pass
 ###############################
 ######### Definition end ######
 ################################
 class btn_make() :
+    
     def __init__(self) :
         self.btn_make_init = 0
         self.btn_msg = 0
@@ -161,11 +160,11 @@ class btn_make() :
         # 이부분 어떻게 처리할지 몰라서 그냥 if 문으로 처리중
         # 방법을알면 금방할거같은데 
         
-        if cmd == "btnpress" : 
+        if cmd == "btnpress"  : 
             self.btn_make_init.config(command= btnpress)
-        if cmd == "exitpress" : # killshot switch, 
+        if cmd == "exitpress" : # killshot switch
             self.btn_make_init.config(command=  exitpress)
-        if cmd == "disconnect" :
+        if cmd == "disconnect":
             self.btn_make_init.config(command= disconnect)
         
 ###################################################
@@ -181,6 +180,33 @@ class btn_make() :
     
 """
 
+"""
+MATPLOTLIB 
+"""
+class draw_graph() :
+    def __init__ (self) :
+        self.data_recieve = []
+        self.data_transmit = []
+        self.data_x = []
+        self.data_y = []
+        
+        
+    def make_graph(self,figsize,dpi, subplot) :
+        
+        self.figsize = figsize
+        self.dpi     = dpi
+        self.subplot = subplot
+        self.figure = plt.Figure(self.figsize, self.dpi)
+        self.ax = self.figure.add_subplot(self.subplot)
+        self.line = FigureCanvasTkAgg(self.figure, root)
+        self.line.get_tk_widget().pack(side=tk.LEFT, fill= tk.BOTH)
+        
+        
+        
+        
+    
+        
+        
 
 board_combo = combo_make()
 baud_combo  = combo_make()
