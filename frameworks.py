@@ -15,7 +15,7 @@ root = tk.Tk()
 root.title("liquid frameworks")
 root.geometry("500x800")
 root.resizable(False,False)
-
+py_serial = 0
 
 
 # combo box 만드는 class , member 변수 초기화 위에서 시켜주고
@@ -132,10 +132,16 @@ def btnpress() :
     print("Initiating Arudino Serial")
     py_serial = serial.Serial(port=dev_combo.getU("dev"), baudrate = baud_combo.getU("baud"))
     check_sum.check_(using_combo)
+    if using_combo.getU(("pin_")) :
+        print("using digitalWrite")
+    else :
+        print("using AnalogWrite")
 
 ## kill shot button
 def exitpress():
     exit()
+def disconnect():
+    py_serial.close()
 ###############################
 ######### Definition end ######
 ################################
@@ -157,8 +163,10 @@ class btn_make() :
         
         if cmd == "btnpress" : 
             self.btn_make_init.config(command= btnpress)
-        if cmd == "exitpress" :
-            self.btn_make_init.config(command=  exitpress )
+        if cmd == "exitpress" : # killshot switch, 
+            self.btn_make_init.config(command=  exitpress)
+        if cmd == "disconnect" :
+            self.btn_make_init.config(command= disconnect)
         
 ###################################################
 ###################################################
@@ -188,11 +196,15 @@ using_combo.make_combo("pin_",10,100)
 check_sum = check_make()
 
 
-btn_1 = btn_make()
-btn_1.make_btn("connect", "btnpress" , 5, 130, 10)
+btn_connect = btn_make()
+btn_connect.make_btn("connect", "btnpress" , 5, 130, 10)
 
-btn_2 = btn_make()
-btn_2.make_btn("exit", "exitpress", 100, 130, 10)
+btn_disconnect = btn_make()
+btn_disconnect.make_btn("disconnect","disconnect", 90, 130, 10)
+
+btn_exit = btn_make()
+btn_exit.make_btn("exit", "exitpress", 450, 0, 5)
+
 
 
 lb = tk.Label(root)
