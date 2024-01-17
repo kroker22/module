@@ -189,14 +189,19 @@ class draw_graph() :
         self.data_transmit = []
         self.data_x = []
         self.data_y = []
+        self.figsize = ()
         
+    def make_graph(self,figsize,dpi, subplot,x,y) :
         
-    def make_graph(self,figsize,dpi, subplot) :
-        
+        # 그래프 기본 속성 생성 
         self.figsize = figsize
         self.dpi     = dpi
         self.subplot = subplot
+        
+        self.x_place = x
+        self.y_place = y
         self.figure = plt.Figure(self.figsize, self.dpi)
+        
         self.ax = self.figure.add_subplot(self.subplot)
         self.line = FigureCanvasTkAgg(self.figure, root)
         self.line.get_tk_widget().pack(side=tk.LEFT, fill= tk.BOTH)
@@ -204,7 +209,9 @@ class draw_graph() :
         
         
         
-    
+        
+grid_figure = draw_graph()
+grid_figure.make_graph((3,1), 50, 111)
         
         
 
