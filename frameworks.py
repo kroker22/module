@@ -65,15 +65,7 @@ class combo_make() :
             self.box_name_init.config(state = "readonly")
             self.box_name_init.set(name)
             self.name = name
-            
-        elif name == "pin_":
-            self.box_name_init = ttk.Combobox(root)
-            self.box_name_init.config(height = 5)
-            self.box_name_init.config(value = self.box_data_ino)
-            self.box_name_init.place(x = self.x, y = self.y)
-            self.box_name_init.config(state = "readonly")
-            self.box_name_init.set(name)
-            self.name = name
+      
             
     def getU(self,name : str):
         if name == "board":
@@ -82,37 +74,30 @@ class combo_make() :
             return self.box_name_init.get()
         if name == "dev":
             return self.box_name_init.get()
-        if name == "pin_" :
-            return self.box_name_init.get()
-        
-        
-class check_make(combo_make):
-    def __init__(self):
-        super().__init__()
-        self.Digital_Pin = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-        self.Analog_Pin = ["A0", "A1", "A2", "A3", "A4", "A5"]
-        self.check_boxes = []
-        
-    def check_(self, using_combo):
-        self.check_boxes = []  # Reset the list for each call
-        
-        for check_box in root.winfo_children() :
-            if isinstance(check_box, tk.Checkbutton):
-                check_box.destroy()
-                
-        pins = self.Digital_Pin if using_combo.getU("pin_") == "digital" else self.Analog_Pin
-        # 삼항 연산자로 pin 에 데이터 저장
-        
-        for i, pin in enumerate(pins):
-            
-            var = tk.IntVar()
-            check_box = tk.Checkbutton(root, text=str(pin), variable=var)
-            check_box.place(x=10, y=170 + i * 20)
-            self.check_boxes.append(var)
-            
-            
-            
 
+
+            
+class pin_check(combo_make) : # 해당핀 고르면 전체핀이 그냥 뜨는걸로
+    def __init__ (self) :
+        self.x_place = 0
+        self.y_place = 0
+        self.Arduino_Pin = ["A0", "A1", "A2", "A3", "A4", "A5", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        self.check_boxes = [] 
+        
+        
+    def make_pin_check(self,board_combo) :
+
+        Pins = self.Arduino_Pin if board_combo.getU("board") == "Arduino" else 0
+        
+        for i, pin in enumerate(Pins) : 
+            var = tk.IntVar()
+            check_box = tk.Checkbutton(root, text = str(pin), variable= var)
+            check_box.place(x= 10, y=170 + i * 20)
+            self.check_boxes.append(var)
+            #print(self.check_boxes) # debug code, print out data
+        
+        
+        
 #############################
 ######## Definition of Button
 ##############################
@@ -129,11 +114,10 @@ def btnpress() :
     lb.config(text = a )
     print("Initiating Arudino Serial")
     py_serial = serial.Serial(port=dev_combo.getU("dev"), baudrate = baud_combo.getU("baud"))
-    check_sum.check_(using_combo)
-    if using_combo.getU(("pin_"))  == "digital":
-        print("using digitalWrite")
-    else :
-        print("using AnalogWrite")
+    pin_debug.make_pin_check(board_combo)
+    
+    #check_sum.check_(using_combo)
+
 
 ## kill shot button
 def exitpress():
@@ -183,6 +167,8 @@ class btn_make() :
 """
 MATPLOTLIB 
 """
+
+
 class draw_graph() :
     def __init__ (self) :
         self.data_recieve = []
@@ -194,25 +180,39 @@ class draw_graph() :
     def make_graph(self,figsize,dpi, subplot,x,y) :
         
         # 그래프 기본 속성 생성 
+        # 값을 받아오면 pyserial 로 
+        # 그값을 자동으로 받아와서 리스트에 
+        # FIFO 구조로 리스트의 값을 그래프로 그리고싶다
+        self.df = DataFrame(self.data_recieve, columns= ['time','t'])
         self.figsize = figsize
         self.dpi     = dpi
         self.subplot = subplot
+        # 시간 정보는 어떻게 받아옴?
+        # 그냥 데이터는 어떻게 리스트로 저장함?
         
         self.x_place = x
         self.y_place = y
         self.figure = plt.Figure(self.figsize, self.dpi)
-        
         self.ax = self.figure.add_subplot(self.subplot)
         self.line = FigureCanvasTkAgg(self.figure, root)
-        self.line.get_tk_widget().pack(side=tk.LEFT, fill= tk.BOTH)
+        self.line.get_tk_widget().place(x= self.x_place,y= self.y_place)
+        
+        """
+        
+
+        self.df2 = self.df2[['time','Y']].groupby('time').sum()
+        
+        """
+
         
         
-        
-        
-        
+
+
 grid_figure = draw_graph()
-grid_figure.make_graph((3,1), 50, 111)
+grid_figure.make_graph((3,1), 100, 111,200,50)
         
+
+
         
 
 board_combo = combo_make()
@@ -224,9 +224,10 @@ board_combo.make_combo("board",10,10)
 baud_combo.make_combo("baud",10,40)
 dev_combo.make_combo("dev",10,70)    
 using_combo.make_combo("pin_",10,100) 
-        
 
-check_sum = check_make()
+pin_debug = pin_check()
+
+#check_sum = check_make()
 
 
 btn_connect = btn_make()
