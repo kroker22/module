@@ -183,7 +183,7 @@ class draw_graph(pin_check) :
         # 그래프 기본 속성 생성 
         # 값을 받아오면 pyserial 로 
         # 그값을 자동으로 받아와서 리스트에 
-        # FIFO 구조로 리스트의 값을 그래프로 그리고싶다
+        # FIFO 구조로 리스트의 값을 그래프로 그리고싶다.
         self.df = DataFrame(self.data_recieve, columns= ['time','t'])
         self.figsize = figsize
         self.dpi     = dpi
