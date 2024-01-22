@@ -95,6 +95,7 @@ class pin_check(combo_make) : # 해당핀 고르면 전체핀이 그냥 뜨는�
             check_box.place(x= 10, y=170 + i * 20)
             self.check_boxes.append(var)
             #print(self.check_boxes) # debug code, print out data
+            a = 0
         
         
         
@@ -169,7 +170,7 @@ MATPLOTLIB
 """
 
 
-class draw_graph() :
+class draw_graph(pin_check) :
     def __init__ (self) :
         self.data_recieve = []
         self.data_transmit = []
